@@ -1,10 +1,8 @@
-name: Main Workflow
-
 on:
   push:
     branches:
       - "feature/**"
 
 jobs:
-  call-reusable-workflow:
+  feature-branch:
     uses: wfercosta/gha-reusable-workflows/.github/workflows/reusable-app-k8s-feature.yaml@main
