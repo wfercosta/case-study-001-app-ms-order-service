@@ -1,10 +1,10 @@
 package com.wfercosta.ms.order.domain.usecase;
 
-import com.wfercosta.ms.order.entrypoint.dto.OrderDto;
+import com.wfercosta.ms.order.domain.entity.Order;
 
-public class CreateOrderUseCase implements UseCase<OrderDto, OrderDto> {
+public class CreateOrderUseCase implements UseCase<Order, Order> {
     @Override
-    public OrderDto execute(OrderDto in) {
+    public Order execute(Order in) {
         return null;
     }
 }

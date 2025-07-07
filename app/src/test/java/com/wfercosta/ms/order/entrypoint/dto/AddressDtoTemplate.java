@@ -19,7 +19,7 @@ public class AddressDtoTemplate implements TemplateLoader {
             add("state","SP");
             add("country","Brasil");
             add("zipcode","03105003");
-            add("purpose",PurposeType.ENTREGA);
+            add("purpose", PurposeType.ENTREGA);
             add("region","SUDESTE");
         }});
     }

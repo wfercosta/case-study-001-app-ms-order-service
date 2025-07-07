@@ -3,9 +3,11 @@ package com.wfercosta.ms.order.entrypoint.rest;
 import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wfercosta.ms.order.domain.entity.Order;
 import com.wfercosta.ms.order.domain.usecase.CreateOrderUseCase;
 import com.wfercosta.ms.order.entrypoint.dto.OrderDto;
 import com.wfercosta.ms.order.entrypoint.dto.OrderDtoTemplate;
+import com.wfercosta.ms.order.entrypoint.mappers.OrderMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +34,9 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @WebMvcTest(value = OrderController.class)
 public class OrderControllerTest {
 
-    public static final String EMPTY_JSON = "{}";
+    private static final String EMPTY_JSON = "{}";
+    private static final OrderMapper mapper = OrderMapper.INSTANCE;
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -41,23 +45,23 @@ public class OrderControllerTest {
 
     @MockitoBean
     private CreateOrderUseCase useCase;
-
+    
     @BeforeAll
     public static void beforeAll() {
         FixtureFactoryLoader.loadTemplates(OrderDtoTemplate.class.getPackageName());
     }
 
     @Test
-    @DisplayName("Should return status created When the product is valid and meets the business rules")
-    public void Should_ReturnStatusCreated_When_ProductValidAndMeetsBusinessRules() throws Exception {
+    @DisplayName("Deve retornar status 201 quando o pedido for valido")
+    public void Should_ReturnStatus201_When_OrderValid() throws Exception {
 
         //Arrange
         final OrderDto fixture = Fixture.from(OrderDto.class).gimme(OrderDtoTemplate.BASIC);
 
+        final Order order = mapper.toEntity(fixture);
 
-        Mockito.when(useCase.execute(Mockito.eq(fixture)))
-                .thenReturn(fixture.toBuilder().id(1L)
-                        .build());
+        Mockito.when(useCase.execute(Mockito.eq(order)))
+                .thenReturn(order.toBuilder().id(1L).build());
 
         //Act | Assertions
         mockMvc.perform(post("/v1/orders")
@@ -65,7 +69,7 @@ public class OrderControllerTest {
                         .content(objectMapper.writeValueAsString(fixture)))
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.data.id", greaterThan(0)));
+                .andExpect(jsonPath("$.data.id_pedido", greaterThan(0)));
 
     }
 }
