@@ -1,26 +1,45 @@
 package com.wfercosta.ms.order.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Data
 @Builder(toBuilder = true)
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "order_item")
 public class OrderItem {
 
-    @JsonProperty("id_item")
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @JsonProperty("descricao")
     private String description;
 
-    @JsonProperty("valor_unitario")
     private BigDecimal value;
 
-    @JsonProperty("quantidade")
     private Integer amount;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Order order;
+
+    @CreatedDate
+    @EqualsAndHashCode.Exclude
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @EqualsAndHashCode.Exclude
+    private LocalDateTime updatedAt;
 }

@@ -1,32 +1,54 @@
 package com.wfercosta.ms.order.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Data
 @Builder(toBuilder = true)
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "recipient")
 public class Recipient {
 
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @JsonProperty("nome")
     private String name;
 
-    @JsonProperty("tipo_pessoa")
     private PersonType typePerson;
 
-    @JsonProperty("regime_tributacao")
     private TaxationType typeTaxation;
 
-    @JsonProperty("documentos")
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "recipient")
     private List<Document> documents;
 
-    @JsonProperty("enderecos")
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "recipient")
     private List<Address> addresses;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Order order;
+
+    @CreatedDate
+    @EqualsAndHashCode.Exclude
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @EqualsAndHashCode.Exclude
+    private LocalDateTime updatedAt;
 }
 

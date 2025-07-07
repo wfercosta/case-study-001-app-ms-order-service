@@ -1,0 +1,9 @@
+CREATE TABLE order (
+  id INT NOT NULL AUTO_INCREMENT,
+  date DATE  NOT NULL,
+  value_total  DECIMAL NOT NULL,
+  value_shipment DECIMAL NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (id)
+);
